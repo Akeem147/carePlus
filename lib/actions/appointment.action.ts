@@ -2,7 +2,7 @@
 import { ID, Query } from "node-appwrite";
 import {
   APPOINTMENT_COLLECTION_ID,
-  DATABASE_ID,
+  NEXT_PUBLIC_DATABASE_ID,
   databases,
   messaging,
   NEXT_PUBLIC_BUCKET_ID,
@@ -19,7 +19,7 @@ export const createAppointment = async (
 ) => {
   try {
     const newAppointment = await databases.createDocument(
-      DATABASE_ID!,
+      NEXT_PUBLIC_DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       ID.unique(),
       appointment
@@ -34,7 +34,7 @@ export const createAppointment = async (
 export const getAppointment = async (appointmentId: string) => {
   try {
     const appointment = await databases.getDocument(
-      DATABASE_ID!,
+      NEXT_PUBLIC_DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       appointmentId
     );
@@ -47,11 +47,11 @@ export const getAppointment = async (appointmentId: string) => {
 export const getRecentAppointmentList = async () => {
   try {
     const appointments = await databases.listDocuments(
-      DATABASE_ID!,
+      NEXT_PUBLIC_DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       [Query.orderDesc("$createdAt")]
     );
-
+  
     const initialCounts = {
       scheduleCount: 0,
       pendingCount: 0,
@@ -92,7 +92,7 @@ export const updateAppointment = async ({
 }: UpdateAppointmentParams) => {
   try {
     const updatedAppointment = await databases.updateDocument(
-      DATABASE_ID!,
+      NEXT_PUBLIC_DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       appointmentId,
       appointment
