@@ -14,6 +14,7 @@ import { formatDateTime, parseStringify } from "../utils";
 import { Appointment } from "@/types/appwrite.types";
 import { revalidatePath } from "next/cache";
 
+// Function to create a new appointment
 export const createAppointment = async (
   appointment: CreateAppointmentParams
 ) => {
@@ -31,6 +32,7 @@ export const createAppointment = async (
   }
 };
 
+// Function to get a single appointment by ID
 export const getAppointment = async (appointmentId: string) => {
   try {
     const appointment = await databases.getDocument(
@@ -44,6 +46,7 @@ export const getAppointment = async (appointmentId: string) => {
   }
 };
 
+// Function to get a list of recent appointments with counts
 export const getRecentAppointmentList = async () => {
   try {
     const appointments = await databases.listDocuments(
@@ -51,39 +54,45 @@ export const getRecentAppointmentList = async () => {
       APPOINTMENT_COLLECTION_ID!,
       [Query.orderDesc("$createdAt")]
     );
-  
+
+    // Ensure appointments.documents is an array before proceeding
+    const documents = Array.isArray(appointments.documents)
+      ? appointments.documents
+      : [];
+
+    // Initialize counts
     const initialCounts = {
       scheduleCount: 0,
       pendingCount: 0,
       cancelCount: 0,
     };
 
-    const counts = (appointments.documents as Appointment[]).reduce(
-      (acc, appointment) => {
-        if (appointment.status === "scheduled") {
-          acc.scheduleCount += 1;
-        } else if (appointment.status === "pending") {
-          acc.pendingCount += 1;
-        } else if (appointment.status === "cancelled") {
-          acc.cancelCount += 1;
-        }
-        return acc;
-      },
-      initialCounts
-    );
+    // Safely reduce the documents array to count statuses
+    const counts = documents.reduce((acc, appointment) => {
+      if (appointment.status === "scheduled") {
+        acc.scheduleCount += 1;
+      } else if (appointment.status === "pending") {
+        acc.pendingCount += 1;
+      } else if (appointment.status === "cancelled") {
+        acc.cancelCount += 1;
+      }
+      return acc;
+    }, initialCounts);
 
+    // Prepare the data to return, including the counts and documents
     const data = {
       totalCount: appointments.total,
       ...counts,
-      documents: appointments.documents,
+      documents: documents,
     };
 
     return parseStringify(data);
   } catch (error) {
-    console.error("An error occurred while sending sms:", error);
+    console.error("An error occurred while retrieving appointments:", error);
   }
 };
 
+// Function to update an existing appointment
 export const updateAppointment = async ({
   appointmentId,
   userId,
@@ -97,20 +106,34 @@ export const updateAppointment = async ({
       appointmentId,
       appointment
     );
-    if (!updateAppointment) {
+    if (!updatedAppointment) {
       throw new Error("Appointment not found!");
     }
 
-    const smsMessage = `Greetings from CarePlus. ${type === "schedule" ? `Your appointment has been scheduled for ${formatDateTime(appointment.schedule!).dateTime} with Dr. ${appointment.primaryPhysician}` : `We regret to inform that your appointment for ${formatDateTime(appointment.schedule!).dateTime} is cancelled. Reason:  ${appointment.cancellationReason}`}.`;
+    // Send SMS message based on appointment type
+    const smsMessage = `Greetings from CarePlus. ${
+      type === "schedule"
+        ? `Your appointment has been scheduled for ${
+            formatDateTime(appointment.schedule!).dateTime
+          } with Dr. ${appointment.primaryPhysician}`
+        : `We regret to inform that your appointment for ${
+            formatDateTime(appointment.schedule!).dateTime
+          } is cancelled. Reason:  ${appointment.cancellationReason}`
+    }.`;
+
+    // Send SMS notification
     await sendSMSNotification(userId, smsMessage);
 
+    // Revalidate the path for admin page
     revalidatePath("/admin");
+
     return parseStringify(updatedAppointment);
   } catch (error) {
     console.log(error);
   }
 };
 
+// Function to send SMS notification
 export const sendSMSNotification = async (userId: string, content: string) => {
   try {
     const message = await messaging.createSms(
@@ -119,7 +142,7 @@ export const sendSMSNotification = async (userId: string, content: string) => {
       [],
       [userId]
     );
-    return parseStringify(message)
+    return parseStringify(message);
   } catch (error) {
     console.log(error);
   }
