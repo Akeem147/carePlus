@@ -3,11 +3,13 @@ import PassKeyModal from "@/components/PassKeyModal";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Home({searchParams}: SearchParamProps) {
-  const isAdmin = typeof searchParams?.admin === "string" && searchParams.admin === "true";
+const Home = ({ searchParams }: SearchParamProps) => {
+  const isAdmin = searchParams?.admin === "true";
+
   return (
     <div className="flex h-screen max-h-screen">
       {isAdmin && <PassKeyModal />}
+
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[496px]">
           <Image
@@ -40,4 +42,6 @@ export default async function Home({searchParams}: SearchParamProps) {
       />
     </div>
   );
-}
+};
+
+export default Home;

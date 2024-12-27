@@ -13,7 +13,7 @@ import {
   databases,
   storage,
 } from "../appwrite.config";
-import { NextRequest } from "next/server";
+
 
 export const createUser = async (user: CreateUserParams) => {
   try {

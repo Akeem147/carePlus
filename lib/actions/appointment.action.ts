@@ -5,13 +5,10 @@ import {
   NEXT_PUBLIC_DATABASE_ID,
   databases,
   messaging,
-  NEXT_PUBLIC_BUCKET_ID,
-  NEXT_PUBLIC_ENDPOINT,
-  NEXT_PUBLIC_PROJECT_ID,
-  PATIENT_COLLECTION_ID,
+
 } from "../appwrite.config";
 import { formatDateTime, parseStringify } from "../utils";
-import { Appointment } from "@/types/appwrite.types";
+
 import { revalidatePath } from "next/cache";
 
 // Function to create a new appointment

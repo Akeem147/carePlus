@@ -1,8 +1,7 @@
 "use client";
-import React, { useState } from "react";
+
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,9 +36,9 @@ interface CustomProps {
 
 const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
   const {
-    fieldType,
+    
     iconSrc,
-    iconAlt,
+   
     placeholder,
     showTimeSelect,
     dateFormat,

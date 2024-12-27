@@ -3,14 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { getAppointmentSchema } from "@/lib/validation";
-import { createUser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
 import Image from "next/image";
 import { SelectItem } from "../ui/select";
@@ -29,7 +27,7 @@ const AppointmentForm = ({
   patientId: string;
   type: "create" | "cancel" | "schedule";
   appointment?: Appointment;
-  setOpen: (open: boolean) => void
+  setOpen?: (open: boolean) => void
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);

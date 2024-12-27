@@ -5,7 +5,7 @@ import Image from "next/image";
 
 
 const Appointment = async ({ params }: { params: { userId: string } }) => { 
-  // Fetch the patient using the userId
+  
   const { userId } = params;
  
   
