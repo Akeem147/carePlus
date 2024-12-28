@@ -6,7 +6,7 @@ import { parseStringify } from "../utils";
 
 import {
   NEXT_PUBLIC_BUCKET_ID,
-  NEXT_PUBLIC_DATABASE_ID,
+  DATABASE_ID,
   NEXT_PUBLIC_ENDPOINT,
   PATIENT_COLLECTION_ID,
   NEXT_PUBLIC_PROJECT_ID,
@@ -69,7 +69,7 @@ export const registerPatient = async ({
     console.log({ gender: patient.gender });
 
     const newPatient = await databases.createDocument(
-      NEXT_PUBLIC_DATABASE_ID!,
+      DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
       ID.unique(),
       {
@@ -88,7 +88,7 @@ export const registerPatient = async ({
 export const getPatient = async (userId: string) => {
   try {
     const patients = await databases.listDocuments(
-      NEXT_PUBLIC_DATABASE_ID!,
+      DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
       [Query.equal("userId", [userId])]
       

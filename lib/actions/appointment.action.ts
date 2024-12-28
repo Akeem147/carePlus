@@ -2,7 +2,7 @@
 import { ID, Query } from "node-appwrite";
 import {
   APPOINTMENT_COLLECTION_ID,
-  NEXT_PUBLIC_DATABASE_ID,
+  DATABASE_ID,
   databases,
   messaging,
 
@@ -16,8 +16,10 @@ export const createAppointment = async (
   appointment: CreateAppointmentParams
 ) => {
   try {
+    console.log('Server-side log:', process.env.DATABASE_ID);
+    
     const newAppointment = await databases.createDocument(
-      NEXT_PUBLIC_DATABASE_ID!,
+      DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       ID.unique(),
       appointment
@@ -29,11 +31,12 @@ export const createAppointment = async (
   }
 };
 
+
 // Function to get a single appointment by ID
 export const getAppointment = async (appointmentId: string) => {
   try {
     const appointment = await databases.getDocument(
-      NEXT_PUBLIC_DATABASE_ID!,
+      DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       appointmentId
     );
@@ -43,11 +46,15 @@ export const getAppointment = async (appointmentId: string) => {
   }
 };
 
+
+
+
 // Function to get a list of recent appointments with counts
 export const getRecentAppointmentList = async () => {
   try {
+  
     const appointments = await databases.listDocuments(
-      NEXT_PUBLIC_DATABASE_ID!,
+      DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       [Query.orderDesc("$createdAt")]
     );
@@ -98,7 +105,7 @@ export const updateAppointment = async ({
 }: UpdateAppointmentParams) => {
   try {
     const updatedAppointment = await databases.updateDocument(
-      NEXT_PUBLIC_DATABASE_ID!,
+      DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       appointmentId,
       appointment

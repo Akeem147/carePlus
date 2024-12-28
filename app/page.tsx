@@ -1,15 +1,36 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import PatientForm from "@/components/forms/PatientForm";
 import PassKeyModal from "@/components/PassKeyModal";
 import Image from "next/image";
 import Link from "next/link";
 
-const Home = ({ searchParams }: SearchParamProps) => {
-  const isAdmin = searchParams?.admin === "true";
+
+
+export default function Home({ searchParams }: SearchParamProps) {
+  const [resolvedSearchParams, setResolvedSearchParams] = useState<
+    { [key: string]: string | string[] | undefined } | null
+  >(null);
+
+  useEffect(() => {
+    async function resolveParams() {
+      const resolved = await searchParams;
+      setResolvedSearchParams(resolved);
+      console.log("Resolved Search Params:", resolved);
+    }
+    resolveParams();
+  }, [searchParams]);
+
+  if (!resolvedSearchParams) {
+    return <div>Loading...</div>; // Show a loader while resolving searchParams
+  }
+
+  const isAdmin = resolvedSearchParams?.admin === "true";
 
   return (
     <div className="flex h-screen max-h-screen">
       {isAdmin && <PassKeyModal />}
-
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[496px]">
           <Image
@@ -42,6 +63,4 @@ const Home = ({ searchParams }: SearchParamProps) => {
       />
     </div>
   );
-};
-
-export default Home;
+}
