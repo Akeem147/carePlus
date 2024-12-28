@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 
-
 export default function Home({ searchParams }: SearchParamProps) {
   const [resolvedSearchParams, setResolvedSearchParams] = useState<
     { [key: string]: string | string[] | undefined } | null

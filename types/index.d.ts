@@ -3,8 +3,9 @@
 
 declare type SearchParamProps = {
   params: { [key: string]: string };
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };  // Removed Promise
 };
+
   
   declare type Gender = "male" | "female" | "other";
   declare type Status = "pending" | "scheduled" | "cancelled";
